@@ -7,6 +7,7 @@ def fetch_data(url, save_path, parameters):
     """
     :param url: url to dataset
     :param save_path: save directory
+    :param parameters: is a dictionary that contains some of most important read_csv parameters
     :return:
     """
 
