@@ -10,7 +10,8 @@ def fetch_data(url, save_path, parameters):
     :param parameters: is a dictionary that contains some of most important read_csv parameters
     :return:
     """
-
+    sep, header, na_values = parameters.values()
+    
     if not os.path.isdir(save_path):
         os.mkdir(save_path)
 

@@ -8,12 +8,13 @@ from sklearn.model_selection import StratifiedKFold
 from collections import defaultdict
 
 
-def validation(model, X, y, type="cv", cv=5, problem="cls"):
+def validation(model, X, y, method="cv", cv=5, problem="cls"):
     """
+    :param problem:
     :param model: model to evaluate
     :param X: features
     :param y: labels
-    :param type: type of evaluation
+    :param method: type of evaluation
     :param cv: number of folds
     :return: return the usual scores for variety of methods
     cross validation
@@ -30,11 +31,12 @@ def validation(model, X, y, type="cv", cv=5, problem="cls"):
 
     else:
         # actually is not neg_metric I leaved it as that for convenience
+        # when the result will be shown it will be mean_squared_error and mean absolute error
         scoring = ["neg_mean_absolute_error", "neg_mean_squared_error"]
         scoring_fun = {"neg_mean_squared_error": mean_squared_error,
                        "mean_absolute_error": mean_absolute_error}
 
-    if type == 'cv':
+    if method == 'cv':
         cv_scores = cross_val_score(model, X, y, cv=cv, scoring=scoring)
         if problem == "cls":
             print_scores(scoring, cv_scores)
@@ -42,8 +44,8 @@ def validation(model, X, y, type="cv", cv=5, problem="cls"):
             for metric in cv_scores:
                 cv_scores[metric] = -cv_scores[metric]
             print_scores(scoring, cv_scores)
-            
-    if type == "ts":
+
+    if method == "ts":
         ts_scores = defaultdict(list)
         tscv = TimeSeriesSplit(n_splits=cv)
 
@@ -59,7 +61,7 @@ def validation(model, X, y, type="cv", cv=5, problem="cls"):
         print_scores(scoring, ts_scores)
 
     if problem == "cls":
-        if type == "ss":
+        if method == "ss":
             ss_scores = defaultdict(list)
             skf = StratifiedKFold(n_splits=cv)
 
