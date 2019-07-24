@@ -1,4 +1,5 @@
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
+from sklearn.metrics import mean_absolute_error, mean_squared_error
 
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import TimeSeriesSplit
@@ -7,7 +8,7 @@ from sklearn.model_selection import StratifiedKFold
 from collections import defaultdict
 
 
-def validation(model, X, y, type, cv=5, seed=0):
+def validation(model, X, y, type="cv", cv=5, problem="cls"):
     """
     :param model: model to evaluate
     :param X: features
@@ -19,17 +20,29 @@ def validation(model, X, y, type, cv=5, seed=0):
     cross validation time series
     cross validation
     """
-    scoring = ["accuracy", "precision", "recall", "f1"]
-    scoring_fun = {"accuracy": accuracy_score,
-                   "f1_score": f1_score,
-                   "precision_score": precision_score,
-                   "recall_score": recall_score}
+
+    if problem == "cls":
+        scoring = ["accuracy", "precision", "recall", "f1"]
+        scoring_fun = {"accuracy": accuracy_score,
+                       "f1_score": f1_score,
+                       "precision_score": precision_score,
+                       "recall_score": recall_score}
+
+    else:
+        # actually is not neg_metric I leaved it as that for convenience
+        scoring = ["neg_mean_absolute_error", "neg_mean_squared_error"]
+        scoring_fun = {"neg_mean_squared_error": mean_squared_error,
+                       "mean_absolute_error": mean_absolute_error}
 
     if type == 'cv':
         cv_scores = cross_val_score(model, X, y, cv=cv, scoring=scoring)
-
-        print_scores(scoring, cv_scores)
-
+        if problem == "cls":
+            print_scores(scoring, cv_scores)
+        else:
+            for metric in cv_scores:
+                cv_scores[metric] = -cv_scores[metric]
+            print_scores(scoring, cv_scores)
+            
     if type == "ts":
         ts_scores = defaultdict(list)
         tscv = TimeSeriesSplit(n_splits=cv)
@@ -45,20 +58,21 @@ def validation(model, X, y, type, cv=5, seed=0):
 
         print_scores(scoring, ts_scores)
 
-    if type == "ss":
-        ss_scores = defaultdict(list)
-        skf = StratifiedKFold(n_splits=cv)
+    if problem == "cls":
+        if type == "ss":
+            ss_scores = defaultdict(list)
+            skf = StratifiedKFold(n_splits=cv)
 
-        for train, test in skf.split(X, y):
+            for train, test in skf.split(X, y):
 
-            X_train, X_test, y_train, y_test = X.loc[train], X.loc[test], y.loc[train], y.loc[test]
-            model.fit(X_train, y_train)
-            y_pred = model.predict(X_test)
+                X_train, X_test, y_train, y_test = X.loc[train], X.loc[test], y.loc[train], y.loc[test]
+                model.fit(X_train, y_train)
+                y_pred = model.predict(X_test)
 
-            for metric in scoring:
-                ss_scores[metric].append(scoring_fun[metric](y_pred, y_test))
+                for metric in scoring:
+                    ss_scores[metric].append(scoring_fun[metric](y_pred, y_test))
 
-            print_scores(scoring, ss_scores)
+                print_scores(scoring, ss_scores)
 
 
 def print_scores(scoring, dict_scores):
