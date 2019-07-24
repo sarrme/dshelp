@@ -1,4 +1,4 @@
-<h1> dshelp</h>
+<h1> dshelp</h1>
 <p>a library for data processing and prediction</p>
 
 <p>work in progress, please <a href="mailto:sarroukh.issame@gmail.com">contact me</a> if you want to contribute.</p>
