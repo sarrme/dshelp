@@ -1,11 +1,13 @@
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_validate
 from sklearn.model_selection import TimeSeriesSplit
 from sklearn.model_selection import StratifiedKFold
 
 from collections import defaultdict
+
+import numpy as np
 
 
 def validation(model, X, y, method="cv", cv=5, problem="cls"):
@@ -25,9 +27,9 @@ def validation(model, X, y, method="cv", cv=5, problem="cls"):
     if problem == "cls":
         scoring = ["accuracy", "precision", "recall", "f1"]
         scoring_fun = {"accuracy": accuracy_score,
-                       "f1_score": f1_score,
-                       "precision_score": precision_score,
-                       "recall_score": recall_score}
+                       "f1": f1_score,
+                       "precision": precision_score,
+                       "recall": recall_score}
 
     else:
         # actually is not neg_metric I leaved it as that for convenience
@@ -37,12 +39,15 @@ def validation(model, X, y, method="cv", cv=5, problem="cls"):
                        "mean_absolute_error": mean_absolute_error}
 
     if method == 'cv':
-        cv_scores = cross_val_score(model, X, y, cv=cv, scoring=scoring)
+        cv_scores = cross_validate(model, X, y, cv=cv, scoring=scoring, n_jobs=-1)
         if problem == "cls":
+
+            scoring = ["test_" + metric for metric in scoring]
             print_scores(scoring, cv_scores)
         else:
             for metric in cv_scores:
                 cv_scores[metric] = -cv_scores[metric]
+
             print_scores(scoring, cv_scores)
 
     if method == "ts":
@@ -58,6 +63,8 @@ def validation(model, X, y, method="cv", cv=5, problem="cls"):
             for metric in scoring:
                 ts_scores[metric].append(scoring_fun[metric](y_pred, y_test))
 
+        for metric in scoring:
+            ts_scores[metric] = np.array(ts_scores[metric])
         print_scores(scoring, ts_scores)
 
     if problem == "cls":
@@ -79,9 +86,9 @@ def validation(model, X, y, method="cv", cv=5, problem="cls"):
 
 def print_scores(scoring, dict_scores):
     for metric in scoring:
-        print(text_result(metric, dict_scores[metric], 2 * dict_scores[metric]))
+        print(text_result(metric, dict_scores[metric]))
 
 
-def text_result(metric, mean, std):
-    return metric.capitalize() + ": " + "{mean:0.2f} (+/- {confidence:0.2f})".format(mean=mean.mean(),
-                                                                                     confidence=2 * std.std())
+def text_result(metric, scores):
+    return metric.capitalize() + ": " + "{mean:0.2f} (+/- {confidence:0.2f})".format(mean=scores.mean(),
+                                                                                     confidence=2 * scores.std())
