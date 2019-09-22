@@ -4,7 +4,7 @@ import numpy as np
 
 
 def na_count(data, column):
-    print("NaN counr: {:0.2f}".format(np.sum(data[column]) / len(data)))
+    print("NaN count: {:0.2f}".format(np.sum(data[column]) / len(data)))
 
 
 def corr_column(data, column):
