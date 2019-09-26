@@ -30,7 +30,7 @@ def validation_test(model, X, y, problem="cls", test_size=0.2, random_stat=0):
 
 def validation_cv(model, X, y, method="cv", cv=5, problem="cls"):
     """
-    Validation function independent of method, scoring and scoring functions are to be defined by the Constants.py file
+    Validation function independent of method, scoring and scoring functions are to be defined in the Constants.py file
 
     :param problem:
     :param model: model to evaluate
