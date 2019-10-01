@@ -10,10 +10,19 @@ def na_count(data, column):
 
 def corr_column(data, column):
     corr_matrix = data.corr()
-    corr_matrix[column].sort_values(ascending=False)
+    corr_col = corr_matrix[column].sort_values(ascending=False)
+    dic_corr = corr_col.to_dict()
+    print("correlation between " + column + " and " + ", ".join(data.columns))
+
+    for k, v in dic_corr.items():
+        print(k.capitalize() + " {:.2f}".format(v))
+    return corr_col
 
 
 def describe(data, num_columns=None):
-    print(data.describe())
+    desc = data.describe()
+    sm = None
+    if num_columns is not None:
+        scatter_matrix(data[num_columns], figsize=(12, 8))
 
-    scatter_matrix(data[num_columns], figsize=(12, 8))
+    return desc, sm 
