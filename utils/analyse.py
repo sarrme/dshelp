@@ -4,7 +4,8 @@ import numpy as np
 
 
 def na_count(data, column):
-    print("NaN count: {:0.2f}".format(np.sum(data[column]) / len(data)))
+    for name, na_sum in data[column].isna().sum().todict():
+        print("Percentage of NaN count for column {}: {:0.2f}%".format(name, 100*na_sum / len(data)))
 
 
 def corr_column(data, column):
