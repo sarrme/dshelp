@@ -10,6 +10,7 @@ from collections import defaultdict
 
 import numpy as np
 
+
 def validation_test(model, X, y, problem="cls", test_size=0.2, random_stat=0):
     """
     :param model: a machine learning model
@@ -46,12 +47,21 @@ def validation_cv(model, X, y, method="cv", cv=5, problem="cls"):
     """
     scoring = Consts.SCORING[problem]
     scoring_fun = Consts.SCORING_FUNCS[problem]
+    scoring_sk = Consts.SKSCORING[problem]
 
     if method == 'cv':
-        cv_scores = cross_validate(model, X, y, cv=cv, scoring=scoring, n_jobs=Consts.CPU_COUNT)
+        cv_scores = cross_validate(model, X, y, cv=cv, scoring=scoring_sk, n_jobs=Consts.CPU_COUNT)
 
-        scoring = ["test_" + metric for metric in scoring]
-        print_scores(scoring, cv_scores)
+        scores = defaultdict(list)
+
+        for new_metric, metric in zip(scoring, scoring_sk):
+            tranf = Consts.SCORE_REG_TRANSF
+            if metric in tranf:
+                scores[new_metric] = tranf[metric](cv_scores["test_" + metric])
+            else:
+                scores[new_metric] = cv_scores["test_" + metric]
+
+        print_scores(scoring, scores)
 
     if method == "ts":
         splitter_scores(model, X, y, TimeSeriesSplit, scoring, scoring_fun, n_splits=cv)
