@@ -2,6 +2,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 
+from util.interact import load_json
 
 def model(X_train=None, y_train=None, name="random forest", search='randomize search', type='cs'):
     """
@@ -16,6 +17,7 @@ def model(X_train=None, y_train=None, name="random forest", search='randomize se
     :return: a trained model to be evaluated
     """
     models = dict()
+    param_grid = load_json("parameters/param_grid.json")
 
     if type == "cs":
         models = {
@@ -26,15 +28,10 @@ def model(X_train=None, y_train=None, name="random forest", search='randomize se
         models = {}
 
     if type == "cs":
-        param_grid = {
-            "random forest": RandomForestClassifier(),
-            "naive bayes": GaussianNB(),
-        }
+        param_grid = param_grid["cs"]
+
     else:
-        param_grid = {
-            "random forest": RandomForestClassifier(),
-            "naive bayes": GaussianNB(),
-        }
+        param_grid = param_grid["re"]
 
     clf = models[name]
 

@@ -5,7 +5,12 @@
       <change beforePath="$PROJECT_DIR$/.idea/dshelp.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dshelp.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/utils/analyse.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/analyse.py" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/utils/Constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/Constants.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/validation.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/validation.py" afterDir="false" />
+>>>>>>> 1eaf5a8378dc780f1d630dbb3ffa254e3558fa91
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -95,6 +100,7 @@
     <option name="height" value="775" />
   </component>
   <component name="ProjectId" id="1P5Zh69EbSaHnC4jFGtyvB6amqA" />
+<<<<<<< HEAD
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -118,6 +124,10 @@
       </pane>
       <pane id="Scope" />
     </panes>
+=======
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+>>>>>>> 1eaf5a8378dc780f1d630dbb3ffa254e3558fa91
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
