@@ -50,12 +50,12 @@ def validation_cv(model, X, y, method="cv", cv=5, problem="cls"):
     scoring_sk = Consts.SKSCORING[problem]
 
     if method == 'cv':
-        cv_scores = cross_validate(model, X, y, cv=cv, scoring=scoring_sk, n_jobs=Consts.CPU_COUNT)
+        cv_scores = cross_validate(model, X, y, cv=TimeSeriesSplit(n_splits=cv), scoring=scoring_sk, n_jobs=Consts.CPU_COUNT)
 
         scores = defaultdict(list)
 
         for new_metric, metric in zip(scoring, scoring_sk):
-            tranf = Consts.SCORE_REG_TRANSF
+            tranf = Consts.SCORE_TRANSF
             if metric in tranf:
                 scores[new_metric] = tranf[metric](cv_scores["test_" + metric])
             else:

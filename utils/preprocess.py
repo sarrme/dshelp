@@ -1,8 +1,6 @@
 import pandas as pd
 
 
-
-
 def preprocess(data, parameters):
     columns = parameters['columns']
     categ_columns = parameters['categ_columns']
@@ -16,4 +14,3 @@ def preprocess(data, parameters):
         x_cat = pd.get_dummies(data[column])
         data.drop(columns=column, inplace=True)
         data.join(x_cat)
-

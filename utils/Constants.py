@@ -12,7 +12,7 @@ CPU_COUNT = multiprocessing.cpu_count()
 # Grid parameters for grid search and randomized search
 PARAM_GRID = {
     "cls": {
-
+"random forest": RandomForestClassifier(),
     },
     "reg": {
 
@@ -57,5 +57,5 @@ SCORING_FUNCS = {
     }
 }
 
-SCORE_REG_TRANSF = {"neg_mean_squared_error": lambda scores: [np.sqrt(-x) for x in scores],
-                    "neg_mean_absolute_error": lambda scores: [-x for x in scores], }
+SCORE_TRANSF = {"neg_mean_squared_error": lambda scores: [np.sqrt(-x) for x in scores],
+                "neg_mean_absolute_error": lambda scores: [-x for x in scores], }
